@@ -1,0 +1,160 @@
+---
+title: "Quickstart"
+description: "Get started with Krypt in under 5 minutes"
+---
+
+Krypt manages your environment variables across teams with end-to-end encryption. By the end of this guide you'll have the CLI installed, a project linked, and your first secrets pushed.
+
+<Note>
+You need a free [Krypt account](https://krypthq.com/signup) and Node.js 20 or newer to follow along.
+</Note>
+
+<Steps>
+
+<Step title="Install the CLI">
+
+<Tabs>
+  <Tab title="npm">
+  ```bash
+  npm install -g @kryptorg/cli
+  ```
+  </Tab>
+  <Tab title="yarn">
+  ```bash
+  yarn global add @kryptorg/cli
+  ```
+  </Tab>
+  <Tab title="pnpm">
+  ```bash
+  pnpm add -g @kryptorg/cli
+  ```
+  </Tab>
+</Tabs>
+
+<Tip>
+Getting a permission error? Run the command with `sudo` (macOS/Linux) or open your terminal as Administrator (Windows).
+
+```bash
+sudo npm install -g @kryptorg/cli
+```
+</Tip>
+
+Verify the install:
+
+```bash
+krypt --version
+```
+
+</Step>
+
+<Step title="Generate an API key">
+
+1. Open the [API keys page](https://krypthq.com/dashboard/api-keys) in your Krypt dashboard
+2. Click **Generate Key**
+3. Give it a name (e.g. "my-laptop")
+4. Copy the key — it starts with `krypt_live_` and is shown only once
+
+</Step>
+
+<Step title="Log in from your terminal">
+
+```bash
+krypt login --key krypt_live_<your-key>
+```
+
+You should see:
+
+```text
+✓ API key verified
+Config saved to ~/.krypt/config.json
+```
+
+</Step>
+
+<Step title="Create a project">
+
+In your [Krypt dashboard](https://krypthq.com/dashboard):
+
+1. Click **New Project**
+2. Name it `my-app`
+3. Save
+
+</Step>
+
+<Step title="Link your local folder">
+
+Inside your project directory, run:
+
+```bash
+krypt init my-app
+```
+
+This creates a `.krypt` config file that links the folder to your Krypt project.
+
+</Step>
+
+<Step title="Push your first secrets">
+
+If you already have a `.env` file, push it directly:
+
+```bash
+krypt push
+```
+
+Or create one first:
+
+```bash
+echo "DATABASE_URL=postgres://localhost:5432/mydb" > .env
+echo "API_TOKEN=secret-value" >> .env
+krypt push
+```
+
+You should see:
+
+```text
+✓ Pushed 2 secret(s) to "my-app" (development)
+```
+
+Your secrets are now encrypted and stored in Krypt.
+
+</Step>
+
+<Step title="Pull secrets on another machine">
+
+On a new machine or in CI, pull your secrets down:
+
+```bash
+krypt pull
+```
+
+Krypt fetches your encrypted secrets and writes them to `.env`.
+
+</Step>
+
+<Step title="Run a command with injected secrets">
+
+Instead of writing a `.env` file, inject secrets directly into a process:
+
+```bash
+krypt run -- node server.js
+```
+
+Krypt loads your secrets as environment variables and starts the command. No `.env` file needed.
+
+</Step>
+
+</Steps>
+
+## What's next
+
+<Columns cols={3}>
+  <Card title="CLI commands" icon="terminal" href="/cli/commands">
+    Every command and flag in the Krypt CLI.
+  </Card>
+  <Card title="Projects and environments" icon="folder" href="/concepts/projects-and-environments">
+    Organize secrets by project and stage.
+  </Card>
+  <Card title="Roles and permissions" icon="shield" href="/concepts/roles-and-permissions">
+    Share secrets with your team safely.
+  </Card>
+</Columns>
