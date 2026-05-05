@@ -1,6 +1,366 @@
 ---
-title: "Commands reference"
-description: "Every command and flag in the Krypt CLI"
+title: "CLI commands"
+description: "Every command and option in the Krypt CLI"
 ---
 
-<Note>This page is being written. For now, see the [Quickstart](/quickstart) for getting started, or reach out to support@krypthq.com.</Note>
+Full reference for the Krypt CLI (`@kryptorg/cli` v2.1.1). If you're new to Krypt, start with the [Quickstart](/quickstart).
+
+## krypt login
+
+Authenticates the CLI with your Krypt account using an API key.
+
+### Usage
+
+```bash
+krypt login --key <api-key>
+```
+
+### Options
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--key` | Your API key (starts with `krypt_live_`) | — |
+
+### Examples
+
+```bash
+krypt login --key krypt_live_abc123def456
+```
+
+```bash
+KRYPT_API_URL=https://custom.krypthq.com krypt login --key krypt_live_abc123def456
+```
+
+<Note>
+Your API key is stored in `~/.krypt/config.json` with `0600` permissions. Generate keys at [krypthq.com/dashboard/api-keys](https://krypthq.com/dashboard/api-keys). Keys are shown only once — store them somewhere safe.
+</Note>
+
+---
+
+## krypt logout
+
+Removes your stored credentials by clearing `~/.krypt/config.json`.
+
+### Usage
+
+```bash
+krypt logout
+```
+
+### Examples
+
+```bash
+krypt logout
+```
+
+```text
+✓ Logged out
+  Removed ~/.krypt/config.json
+```
+
+---
+
+## krypt whoami
+
+Displays the currently authenticated user and their associated projects.
+
+### Usage
+
+```bash
+krypt whoami
+```
+
+### Examples
+
+```bash
+krypt whoami
+```
+
+```text
+Logged in as: shaan@krypthq.com
+Projects: my-app, billing-service, infra
+```
+
+---
+
+## krypt list
+
+Lists all projects in your Krypt account.
+
+### Usage
+
+```bash
+krypt list
+```
+
+`ls` is an alias:
+
+```bash
+krypt ls
+```
+
+### Examples
+
+```bash
+krypt list
+```
+
+```text
+my-app            3 environments    2 members
+billing-service   2 environments    1 member
+infra             1 environment     4 members
+```
+
+---
+
+## krypt init
+
+Links the current directory to a Krypt project. Creates a `.krypt` config file in the directory.
+
+### Usage
+
+```bash
+krypt init <projectName> [options]
+```
+
+### Options
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--env` | Environment to use for this directory | `development` |
+
+### Examples
+
+```bash
+krypt init my-app
+```
+
+```bash
+krypt init my-app --env staging
+```
+
+```text
+✓ Linked to "my-app" (staging)
+  Created .krypt
+```
+
+<Note>
+Add `.krypt` to your `.gitignore` — it contains your project binding but should not be shared across clones.
+</Note>
+
+---
+
+## krypt push
+
+Uploads your local `.env` file to Krypt. Secrets are encrypted before leaving your machine.
+
+### Usage
+
+```bash
+krypt push [options]
+```
+
+### Options
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--env` | Target environment to push to | Environment set by `krypt init` |
+
+### Examples
+
+```bash
+krypt push
+```
+
+```bash
+krypt push --env production
+```
+
+```text
+✓ Pushed 5 secret(s) to "my-app" (production)
+```
+
+<Warning>
+Pushing overwrites all secrets in the target environment. There is no merge — the remote state becomes an exact copy of your local `.env`.
+</Warning>
+
+---
+
+## krypt pull
+
+Downloads secrets from Krypt and writes them to `.env` in the current directory.
+
+### Usage
+
+```bash
+krypt pull [options]
+```
+
+### Options
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--env` | Environment to pull from | Environment set by `krypt init` |
+
+### Examples
+
+```bash
+krypt pull
+```
+
+```bash
+krypt pull --env staging
+```
+
+```text
+✓ Pulled 5 secret(s) from "my-app" (staging)
+  Written to .env
+```
+
+<Note>
+If a `.env` file already exists, it is overwritten. Back up local changes before pulling if needed.
+</Note>
+
+---
+
+## krypt run
+
+Executes a command with your project's secrets injected as environment variables. No `.env` file is written to disk.
+
+### Usage
+
+```bash
+krypt run [options] -- <command>
+```
+
+### Options
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--env` | Environment to load secrets from | Environment set by `krypt init` |
+
+### Examples
+
+```bash
+krypt run -- node server.js
+```
+
+```bash
+krypt run --env production -- npm start
+```
+
+```bash
+krypt run -- printenv DATABASE_URL
+```
+
+<Tip>
+Your shell expands `$VAR` before Krypt sees it. If your command includes literal dollar signs, wrap it in single quotes:
+
+```bash
+krypt run -- sh -c 'echo $DATABASE_URL'
+```
+</Tip>
+
+---
+
+## krypt diff
+
+Compares secrets between two environments of the same project. Shows which keys were added, removed, or changed.
+
+### Usage
+
+```bash
+krypt diff --envA <environment> --envB <environment>
+```
+
+### Options
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--envA` | First environment to compare | — (required) |
+| `--envB` | Second environment to compare | — (required) |
+
+### Examples
+
+```bash
+krypt diff --envA development --envB production
+```
+
+```text
++ STRIPE_LIVE_KEY     (only in production)
+- DEBUG_MODE          (only in development)
+~ DATABASE_URL        (changed)
+```
+
+<Warning>
+The diff output reveals plaintext secret values in your terminal. Run this in a private session and avoid piping output to shared logs.
+</Warning>
+
+---
+
+## krypt share
+
+Invites a teammate to a project by email.
+
+### Usage
+
+```bash
+krypt share <projectName> <email> [options]
+```
+
+### Options
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--role` | Permission level: `admin`, `member`, or `viewer` | `member` |
+
+### Examples
+
+```bash
+krypt share my-app bob@company.com
+```
+
+```bash
+krypt share my-app alice@company.com --role admin
+```
+
+```text
+✓ Invited alice@company.com to "my-app" as admin
+```
+
+<Note>
+Inviting team members requires a Pro plan. The invited user receives an email and must accept before they can access project secrets. See [Roles and permissions](/concepts/roles-and-permissions) for what each role can do.
+</Note>
+
+---
+
+## Configuration
+
+The CLI stores its configuration at `~/.krypt/config.json` with `0600` permissions (readable only by your user).
+
+To point the CLI at a custom API endpoint, set the `KRYPT_API_URL` environment variable:
+
+```bash
+export KRYPT_API_URL=https://custom.krypthq.com
+```
+
+This is useful for self-hosted Krypt deployments or development against a local server.
+
+## Exit codes
+
+| Code | Meaning |
+|------|---------|
+| `0` | Command completed successfully |
+| `1` | Error — authentication failed, project not found, network issue, or invalid input |
+
+## Help
+
+Every command supports `--help` for inline usage information:
+
+```bash
+krypt push --help
+```
+
+```bash
+krypt --help
+```
