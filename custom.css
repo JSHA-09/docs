@@ -2,38 +2,46 @@
    Krypt docs navbar — matches krypthq.com landing page
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── Navbar container: 80px, dark, blurred ── */
+/* ── Navbar outer: dark, blurred, 80px ── */
 #navbar {
   background: rgba(10, 10, 10, 0.7) !important;
   backdrop-filter: blur(12px) !important;
   -webkit-backdrop-filter: blur(12px) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-  height: 80px !important;
 }
 
-/* ── All navbar children: vertically centered ── */
-#navbar > div,
-#navbar > div > div,
-#navbar .topbar-right-container,
-#navbar .topbar-right-container > div {
+/* ── Override Mintlify's h-12 (48px) inner row to 80px ── */
+#navbar .hidden.lg\:flex.items-center.h-12 {
   height: 80px !important;
-  display: flex !important;
   align-items: center !important;
 }
 
-/* ── Search bar: push to center of the navbar ── */
-#navbar .group\/search {
-  position: absolute !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
+/* ── Also fix the absolute bg layers ── */
+#navbar > div:first-child,
+#navbar > div:nth-child(2) {
+  height: 80px !important;
 }
 
-/* ── Right-side container: push items to the end ── */
+/* ── Search + Ask AI container: center in the bar ── */
+#navbar .topbar-right-container > div:first-child {
+  position: fixed !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  top: 0 !important;
+  height: 80px !important;
+  display: flex !important;
+  align-items: center !important;
+  z-index: 40 !important;
+}
+
+/* ── Support, Dashboard, theme toggle: stay right, vertically centered ── */
 #navbar .topbar-right-container {
-  justify-content: flex-end !important;
+  height: 80px !important;
+  align-items: center !important;
 }
 
 /* ── Dashboard button: purple gradient with glow ── */
+#topbar-cta-button a,
 a[href="https://krypthq.com/dashboard"] {
   background: linear-gradient(to right, #7C3AED, #6D28D9) !important;
   border-radius: 8px !important;
@@ -41,23 +49,30 @@ a[href="https://krypthq.com/dashboard"] {
   box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.4) !important;
   height: auto !important;
 }
+#topbar-cta-button a:hover,
 a[href="https://krypthq.com/dashboard"]:hover {
   box-shadow: 0 0 20px rgba(124, 58, 237, 0.4) !important;
 }
+#topbar-cta-button span,
 a[href="https://krypthq.com/dashboard"] span {
   color: #ffffff !important;
   font-weight: 600 !important;
   font-size: 16px !important;
 }
 
-/* ── Support link: landing page style ── */
-#navbar a[href="mailto:support@krypthq.com"] {
+/* ── Support link styling ── */
+.navbar-link a {
   color: rgb(209, 213, 219) !important;
   font-size: 16px !important;
   font-weight: 500 !important;
 }
-#navbar a[href="mailto:support@krypthq.com"]:hover {
+.navbar-link a:hover {
   color: #ffffff !important;
+}
+
+/* ── Theme toggle button: vertically center ── */
+#navbar > div > div > div > button.group {
+  align-self: center !important;
 }
 
 /* ── Navbar logo ── */
