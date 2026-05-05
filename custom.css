@@ -1,21 +1,19 @@
-/* Sidebar — add breathing room from left edge */
-nav[class*="sidebar"],
-aside[class*="sidebar"],
-div[id="sidebar"] {
-  padding-left: 1rem;
+/* Dashboard button — force #883ADE purple in both modes */
+.bg-primary.dark\:bg-primary-light,
+a[href="https://krypthq.com/dashboard"] {
+  background-color: #883ADE !important;
 }
 
-/* Navbar logo — make it larger */
-a[class*="logo"] img,
-nav img[alt*="logo" i],
-header img[alt*="logo" i],
+/* Navbar logo — bigger with margin */
 a[href="https://krypthq.com"] img {
+  height: 38px !important;
+  width: auto !important;
+  margin: 8px 0 !important;
+}
+
+/* Footer logo — bigger with margin */
+footer img {
   height: 32px !important;
   width: auto !important;
-}
-
-/* Footer logo — make it larger */
-footer img {
-  height: 28px !important;
-  width: auto !important;
+  margin: 8px 0 !important;
 }
