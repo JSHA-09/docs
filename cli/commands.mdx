@@ -54,8 +54,7 @@ krypt logout
 ```
 
 ```text
-✓ Logged out
-  Removed ~/.krypt/config.json
+✓ Logged out and config cleared
 ```
 
 ---
@@ -77,9 +76,19 @@ krypt whoami
 ```
 
 ```text
-Logged in as: shaan@krypthq.com
-Projects: my-app, billing-service, infra
+Account
+User ID: user_3D5IGYf50BLotX62fK5NjFHU7sR
+(Email unavailable — API keys don't carry identity by default)
+API Key: krypt_live_abc12...
+
+Projects (2)
+my-app          updated 5/5/2026, 14:30:00
+billing         updated 5/4/2026, 10:15:00
 ```
+
+<Note>
+When authenticated via API key, email is unavailable because keys don't carry user identity. Use the dashboard to see your full account details.
+</Note>
 
 ---
 
@@ -106,9 +115,10 @@ krypt list
 ```
 
 ```text
-my-app            3 environments    2 members
-billing-service   2 environments    1 member
-infra             1 environment     4 members
+Projects (3):
+my-app          updated 5/5/2026, 14:30:00
+billing         updated 5/4/2026, 10:15:00
+infra           updated 5/3/2026, 09:00:00
 ```
 
 ---
