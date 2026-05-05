@@ -45,13 +45,19 @@ Verify the install:
 krypt --version
 ```
 
+Expected output:
+
+```text
+2.1.1
+```
+
 </Step>
 
 <Step title="Generate an API key">
 
 1. Open the [API keys page](https://krypthq.com/dashboard/api-keys) in your Krypt dashboard
 2. Click **Generate Key**
-3. Give it a name (e.g. "my-laptop")
+3. Name it after where you'll use it — e.g. "my-laptop", "production-ci", "teammate-bob"
 4. Copy the key — it starts with `krypt_live_` and is shown only once
 
 </Step>
@@ -66,7 +72,7 @@ You should see:
 
 ```text
 ✓ API key verified
-Config saved to ~/.krypt/config.json
+  Config saved to ~/.krypt/config.json
 ```
 
 </Step>
@@ -121,7 +127,7 @@ Your secrets are now encrypted and stored in Krypt.
 
 <Step title="Pull secrets on another machine">
 
-On a new machine or in CI, pull your secrets down:
+If you're working on multiple machines or setting up CI/CD, run `krypt pull` to fetch the latest secrets:
 
 ```bash
 krypt pull
@@ -147,14 +153,4 @@ Krypt loads your secrets as environment variables and starts the command. No `.e
 
 ## What's next
 
-<Columns cols={3}>
-  <Card title="CLI commands" icon="terminal" href="/cli/commands">
-    Every command and flag in the Krypt CLI.
-  </Card>
-  <Card title="Projects and environments" icon="folder" href="/concepts/projects-and-environments">
-    Organize secrets by project and stage.
-  </Card>
-  <Card title="Roles and permissions" icon="shield" href="/concepts/roles-and-permissions">
-    Share secrets with your team safely.
-  </Card>
-</Columns>
+Got Krypt running? Next, learn about the [CLI commands](/cli/commands), how to [organize secrets across environments](/concepts/projects-and-environments), or [share projects with your team](/concepts/roles-and-permissions). These pages are being expanded — contact support@krypthq.com if you need help in the meantime.
