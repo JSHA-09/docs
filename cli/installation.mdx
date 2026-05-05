@@ -1,6 +1,140 @@
 ---
 title: "Installation"
-description: "Install the Krypt CLI on macOS, Linux, and Windows"
+description: "Install the Krypt CLI on macOS, Linux, or Windows"
 ---
 
-<Note>This page is being written. For now, see the [Quickstart](/quickstart) for getting started, or reach out to support@krypthq.com.</Note>
+## Requirements
+
+- [Node.js](https://nodejs.org/) 20 or newer
+- A free [Krypt account](https://krypthq.com/signup)
+
+## Install with npm
+
+```bash
+npm install -g @kryptorg/cli
+```
+
+Verify the install:
+
+```bash
+krypt --version
+```
+
+Expected output:
+
+```text
+2.1.1
+```
+
+## Permission errors
+
+<Note>
+If you see `EACCES` or "permission denied" errors during install:
+
+- **macOS / Linux** — prefix the command with `sudo`
+- **Windows** — open your terminal as Administrator
+</Note>
+
+```bash
+sudo npm install -g @kryptorg/cli
+```
+
+## Alternative package managers
+
+<Tabs>
+  <Tab title="yarn">
+  ```bash
+  yarn global add @kryptorg/cli
+  ```
+  </Tab>
+  <Tab title="pnpm">
+  ```bash
+  pnpm add -g @kryptorg/cli
+  ```
+  </Tab>
+</Tabs>
+
+## Updating the CLI
+
+Install the latest version over the existing one:
+
+```bash
+npm install -g @kryptorg/cli@latest
+```
+
+Or pin a specific version:
+
+```bash
+npm install -g @kryptorg/cli@2.1.1
+```
+
+## Uninstalling
+
+```bash
+npm uninstall -g @kryptorg/cli
+```
+
+<Note>
+This removes the binary but does not delete your stored credentials. To fully remove Krypt from your system:
+
+```bash
+rm -rf ~/.krypt
+```
+</Note>
+
+## CLI configuration
+
+After running `krypt login`, the CLI stores config at `~/.krypt/config.json` with `0600` permissions (owner-only read/write):
+
+```json
+{
+  "apiKey": "krypt_live_...",
+  "apiUrl": "https://api.krypthq.com"
+}
+```
+
+Override the API URL with the `KRYPT_API_URL` environment variable — useful for self-hosted deployments or testing:
+
+```bash
+export KRYPT_API_URL=https://api.example.com
+krypt whoami
+```
+
+In each project directory, `krypt init` creates a `.krypt` file linking that folder to a Krypt project:
+
+```json
+{
+  "project": "my-app",
+  "environment": "development"
+}
+```
+
+## Troubleshooting
+
+**"krypt: command not found"**
+
+Your npm global `bin` directory is not in your `PATH`. Run `npm config get prefix` and add `<prefix>/bin` to your shell profile. See the [npm docs on resolving global install issues](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally).
+
+**"Cannot find module" errors**
+
+Reinstall with `--force` to rebuild native dependencies:
+
+```bash
+npm install -g @kryptorg/cli --force
+```
+
+**Network errors during install**
+
+If you're behind a corporate proxy, configure npm to use it:
+
+```bash
+npm config set proxy http://proxy.company.com:8080
+npm config set https-proxy http://proxy.company.com:8080
+```
+
+See the [npm proxy configuration docs](https://docs.npmjs.com/cli/v10/using-npm/config#https-proxy).
+
+## Next steps
+
+- [Quickstart](/quickstart) — push your first secret in 5 minutes
+- [CLI commands](/cli/commands) — full reference for every command and flag
