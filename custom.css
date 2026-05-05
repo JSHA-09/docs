@@ -1,28 +1,51 @@
-/* Dashboard button — force #883ADE purple, white bold text */
+/* ── Navbar: match landing page (h-20, dark bg, subtle border) ── */
+#navbar {
+  background: rgba(10, 10, 10, 0.7) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  height: 80px !important;
+}
+#navbar > div {
+  height: 80px !important;
+}
+
+/* ── Dashboard button: purple gradient with glow (matches landing page) ── */
 a[href="https://krypthq.com/dashboard"] {
-  background-color: #883ADE !important;
+  background: linear-gradient(to right, #7C3AED, #6D28D9) !important;
+  border-radius: 8px !important;
+  padding: 10px 20px !important;
+  box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.4) !important;
+  height: auto !important;
+}
+a[href="https://krypthq.com/dashboard"]:hover {
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.4) !important;
 }
 a[href="https://krypthq.com/dashboard"] span {
   color: #ffffff !important;
-  font-weight: 700 !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
 }
 
-/* Taller navbar to match landing page */
-header > div,
-header > nav > div {
-  min-height: 64px !important;
-}
-
-/* Navbar logo — bigger with breathing room */
+/* ── Navbar logo: match landing page h-10 (40px) ── */
 a[href="https://krypthq.com"] img {
-  height: 44px !important;
+  height: 40px !important;
   width: auto !important;
-  margin: 14px 0 !important;
 }
 
-/* Footer logo */
+/* ── Footer logo ── */
 footer img {
   height: 36px !important;
   width: auto !important;
   margin: 10px 0 !important;
+}
+
+/* ── Support link: match landing page nav link style ── */
+#navbar a[href="mailto:support@krypthq.com"] {
+  color: rgb(209, 213, 219) !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+}
+#navbar a[href="mailto:support@krypthq.com"]:hover {
+  color: #ffffff !important;
 }
