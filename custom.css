@@ -1,4 +1,8 @@
-/* ── Navbar: match landing page (h-20, dark bg, subtle border) ── */
+/* ═══════════════════════════════════════════════════════════════
+   Krypt docs navbar — matches krypthq.com landing page
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Navbar container: 80px, dark, blurred ── */
 #navbar {
   background: rgba(10, 10, 10, 0.7) !important;
   backdrop-filter: blur(12px) !important;
@@ -6,14 +10,30 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
   height: 80px !important;
 }
+
+/* ── All navbar children: vertically centered ── */
 #navbar > div,
-#navbar > div > div {
+#navbar > div > div,
+#navbar .topbar-right-container,
+#navbar .topbar-right-container > div {
   height: 80px !important;
   display: flex !important;
   align-items: center !important;
 }
 
-/* ── Dashboard button: purple gradient with glow (matches landing page) ── */
+/* ── Search bar: push to center of the navbar ── */
+#navbar .group\/search {
+  position: absolute !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+}
+
+/* ── Right-side container: push items to the end ── */
+#navbar .topbar-right-container {
+  justify-content: flex-end !important;
+}
+
+/* ── Dashboard button: purple gradient with glow ── */
 a[href="https://krypthq.com/dashboard"] {
   background: linear-gradient(to right, #7C3AED, #6D28D9) !important;
   border-radius: 8px !important;
@@ -30,7 +50,17 @@ a[href="https://krypthq.com/dashboard"] span {
   font-size: 16px !important;
 }
 
-/* ── Navbar logo: match landing page h-10 (40px) ── */
+/* ── Support link: landing page style ── */
+#navbar a[href="mailto:support@krypthq.com"] {
+  color: rgb(209, 213, 219) !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+}
+#navbar a[href="mailto:support@krypthq.com"]:hover {
+  color: #ffffff !important;
+}
+
+/* ── Navbar logo ── */
 a[href="https://krypthq.com"] img {
   height: 40px !important;
   width: auto !important;
@@ -41,14 +71,4 @@ footer img {
   height: 36px !important;
   width: auto !important;
   margin: 10px 0 !important;
-}
-
-/* ── Support link: match landing page nav link style ── */
-#navbar a[href="mailto:support@krypthq.com"] {
-  color: rgb(209, 213, 219) !important;
-  font-size: 16px !important;
-  font-weight: 500 !important;
-}
-#navbar a[href="mailto:support@krypthq.com"]:hover {
-  color: #ffffff !important;
 }
