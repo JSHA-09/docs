@@ -39,7 +39,8 @@
         "group": "CLI",
         "pages": [
           "cli/installation",
-          "cli/commands"
+          "cli/commands",
+          "cli/ci-cd"
         ]
       },
       {
