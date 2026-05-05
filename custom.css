@@ -6,8 +6,11 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
   height: 80px !important;
 }
-#navbar > div {
+#navbar > div,
+#navbar > div > div {
   height: 80px !important;
+  display: flex !important;
+  align-items: center !important;
 }
 
 /* ── Dashboard button: purple gradient with glow (matches landing page) ── */
