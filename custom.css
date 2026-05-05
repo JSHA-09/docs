@@ -1,17 +1,26 @@
-/* Dashboard button — force #883ADE purple in both modes */
-.bg-primary.dark\:bg-primary-light,
+/* Dashboard button — force #883ADE purple, white bold text */
 a[href="https://krypthq.com/dashboard"] {
   background-color: #883ADE !important;
 }
-
-/* Navbar logo — bigger with margin */
-a[href="https://krypthq.com"] img {
-  height: 38px !important;
-  width: auto !important;
-  margin: 8px 0 !important;
+a[href="https://krypthq.com/dashboard"] span {
+  color: #ffffff !important;
+  font-weight: 700 !important;
 }
 
-/* Footer logo — bigger with margin */
+/* Taller navbar to match landing page */
+header > div,
+header > nav > div {
+  min-height: 64px !important;
+}
+
+/* Navbar logo — bigger with breathing room */
+a[href="https://krypthq.com"] img {
+  height: 40px !important;
+  width: auto !important;
+  margin: 12px 0 !important;
+}
+
+/* Footer logo */
 footer img {
   height: 32px !important;
   width: auto !important;
