@@ -15,14 +15,14 @@ header > nav > div {
 
 /* Navbar logo — bigger with breathing room */
 a[href="https://krypthq.com"] img {
-  height: 40px !important;
+  height: 44px !important;
   width: auto !important;
-  margin: 12px 0 !important;
+  margin: 14px 0 !important;
 }
 
 /* Footer logo */
 footer img {
-  height: 32px !important;
+  height: 36px !important;
   width: auto !important;
-  margin: 8px 0 !important;
+  margin: 10px 0 !important;
 }
