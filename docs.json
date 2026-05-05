@@ -8,10 +8,11 @@
   "appearance": {
     "default": "dark"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.png",
   "logo": {
     "light": "/logo/light.png",
-    "dark": "/logo/dark.png"
+    "dark": "/logo/dark.png",
+    "href": "https://krypthq.com"
   },
   "navbar": {
     "links": [
@@ -82,10 +83,6 @@
           { "label": "Security", "href": "https://krypthq.com/security" }
         ]
       }
-    ],
-    "socials": {
-      "X": "404",
-      "Facebook": "404"
-    }
+    ]
   }
 }
