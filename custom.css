@@ -1,0 +1,21 @@
+/* Sidebar — add breathing room from left edge */
+nav[class*="sidebar"],
+aside[class*="sidebar"],
+div[id="sidebar"] {
+  padding-left: 1rem;
+}
+
+/* Navbar logo — make it larger */
+a[class*="logo"] img,
+nav img[alt*="logo" i],
+header img[alt*="logo" i],
+a[href="https://krypthq.com"] img {
+  height: 32px !important;
+  width: auto !important;
+}
+
+/* Footer logo — make it larger */
+footer img {
+  height: 28px !important;
+  width: auto !important;
+}
