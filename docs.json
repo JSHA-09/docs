@@ -72,6 +72,17 @@
     ]
   },
   "footer": {
+    "links": [
+      {
+        "header": "Legal",
+        "items": [
+          { "label": "Privacy Policy", "href": "https://krypthq.com/privacy" },
+          { "label": "Terms of Service", "href": "https://krypthq.com/terms" },
+          { "label": "Cookies Policy", "href": "https://krypthq.com/cookies" },
+          { "label": "Security", "href": "https://krypthq.com/security" }
+        ]
+      }
+    ],
     "socials": {
       "x": "https://twitter.com/krypt_dev",
       "github": "https://github.com/JSHA-09/env-variable-manager"
