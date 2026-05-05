@@ -34,13 +34,18 @@ Krypt uses the following third-party services to operate:
 | Service | Purpose | Region |
 |---------|---------|--------|
 | Clerk | Authentication | US |
-| Supabase | Database | EU West (eu-west-1) |
-| Stripe | Payments | US |
-| Resend | Transactional email | US |
-| Railway | Backend hosting | US |
-| Vercel | Frontend hosting | Global CDN |
+| Supabase | Database | eu-west-1 (Ireland) |
+| Stripe | Payments | TBD (not yet configured) |
+| Resend | Transactional email | eu-west-1 |
+| Railway | Backend hosting | europe-west4 (Amsterdam) |
+| Vercel | Frontend hosting | Global edge network |
+| Sentry | Error tracking | EU (Frankfurt) |
 
-All sub-processors handle data per their respective data processing agreements.
+For full sub-processor agreements and EU-US data transfer details, see [our security page](https://krypthq.com/security).
+
+<Note>
+Clerk processes authentication data in the United States under the EU-US Data Privacy Framework adequacy decision (July 2023). All other sub-processors operate within the EU or on global edge networks.
+</Note>
 
 ## More information
 
