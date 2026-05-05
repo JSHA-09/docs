@@ -1,6 +1,84 @@
 ---
 title: "Roles and permissions"
-description: "Control who can access and manage secrets in your organization"
+description: "How team access works in Krypt"
 ---
 
-<Note>This page is being written. For now, see the [Quickstart](/quickstart) for getting started, or reach out to support@krypthq.com.</Note>
+Every member of a Krypt project has one of four roles. Roles control what a person can read, write, and manage.
+
+## Roles overview
+
+| Role | Read all envs | Write dev/staging | Write production | Manage members |
+|------|:---:|:---:|:---:|:---:|
+| **Owner** | ✓ | ✓ | ✓ direct | ✓ |
+| **Admin** | ✓ | ✓ | ✓ direct | ✓ |
+| **Member** | ✓ | ✓ | Via change request | ✗ |
+| **Viewer** | ✓ | ✗ | ✗ | ✗ |
+
+## Owner
+
+The person who created the project. Owners have full access and cannot be removed from the project. Ownership can be transferred to another member from the dashboard.
+
+## Admin
+
+Full access to secrets across all environments. Admins can invite and remove members, approve change requests, and push directly to production. The only thing an admin cannot do is remove the owner.
+
+Good for: senior engineers, team leads, DevOps.
+
+## Member
+
+The standard team role. Members can read secrets in all environments and push directly to development and staging. To change production secrets, members must submit a **change request** for owner/admin approval.
+
+Good for: most engineers on the team.
+
+## Viewer
+
+Read-only access to all environments. Viewers cannot push, pull, or edit secrets. They can view values in the dashboard.
+
+Good for: stakeholders, PMs, or auditors who need visibility without write access.
+
+## Change requests
+
+Change requests are Krypt's production safety mechanism. When a member tries to edit a production secret, Krypt blocks the direct write and creates a change request instead.
+
+<Steps>
+<Step title="Member proposes a change">
+The member edits a production secret in the dashboard or runs `krypt push --env production`. Instead of applying immediately, Krypt creates a pending change request.
+</Step>
+<Step title="Owner or admin reviews">
+Pending requests appear in the project dashboard. The reviewer sees the proposed key/value changes and can approve or reject.
+</Step>
+<Step title="Change is applied or rejected">
+Approved changes are applied to production immediately. The requester receives an email notification. Rejected changes are preserved with the rejection reason for context.
+</Step>
+</Steps>
+
+<Note>
+Change requests apply only to production. Members edit development and staging directly without approval.
+</Note>
+
+## Inviting members
+
+**From the dashboard:**
+
+Project → Members → Invite. Enter the email and select a role.
+
+**From the CLI:**
+
+```bash
+krypt share my-app bob@company.com --role member
+```
+
+```bash
+krypt share my-app alice@company.com --role admin
+```
+
+The invitee receives an email, clicks the link, and accepts the invite. They must already have a Krypt account or sign up to accept.
+
+<Note>
+Inviting team members requires the project owner to be on the **Pro plan**. Solo accounts can use Krypt freely but cannot add teammates.
+</Note>
+
+## Next steps
+
+- [Encryption and security](/concepts/encryption-and-security) — how Krypt protects your secrets
+- [Quickstart](/quickstart) — get started with the CLI

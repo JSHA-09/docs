@@ -1,6 +1,42 @@
 ---
 title: "What is Krypt"
-description: "An overview of Krypt and how it keeps your secrets safe"
+description: "Secrets management for developers"
 ---
 
-<Note>This page is being written. For now, see the [Quickstart](/quickstart) for getting started, or reach out to support@krypthq.com.</Note>
+Krypt is a secrets management platform that lets development teams store, share, and deploy environment variables with end-to-end encryption. It replaces the fragile practice of passing `.env` files through Slack, email, or git — giving every team member access to the right secrets for the right environment.
+
+## The problem
+
+Most teams manage secrets by copy-pasting `.env` files between developers. This creates real risks:
+
+- **Secrets sprawl** — copies of production credentials live in Slack DMs, emails, local machines, and cloud drives with no central inventory
+- **No audit trail** — when a secret leaks, there's no way to know who had access or when it was last changed
+- **Accidental commits** — `.env` files get pushed to git, exposing credentials in version history permanently
+- **Onboarding friction** — new team members wait hours or days for someone to send them the right env vars
+- **Environment drift** — local, staging, and production configs diverge silently until something breaks
+
+## The solution
+
+Krypt provides three things:
+
+1. **Encrypted central store** — secrets are encrypted with AES-256 before they leave your machine, stored centrally, and decrypted only when pulled or injected
+2. **CLI for daily workflow** — `krypt push`, `krypt pull`, and `krypt run` fit into your existing terminal workflow without changing how you develop
+3. **Dashboard for team management** — invite members, assign roles, review change requests for production, and see an audit log of every action
+
+## Key features
+
+- End-to-end AES-256 encryption for all secrets
+- Three environments per project: development, staging, production
+- Role-based access control (Owner, Admin, Member, Viewer)
+- Change requests for production safety — members propose, admins approve
+- Audit log of all push, pull, share, and edit actions
+- CLI-first workflow with `@kryptorg/cli`
+- Web dashboard for team management and visibility
+
+## How it compares
+
+Krypt is similar in concept to Doppler and Infisical — a centralized secrets manager with a CLI. The difference is scope: Krypt is built to be simpler and more affordable for small teams and solo developers. No Kubernetes operators, no infrastructure agents, no enterprise sales calls. Install the CLI, push your `.env`, invite your team.
+
+## Next steps
+
+- [Quickstart](/quickstart) — get running in 5 minutes

@@ -3,4 +3,110 @@ title: "Troubleshooting"
 description: "Common errors and how to fix them"
 ---
 
-<Note>This page is being written. For now, see the [Quickstart](/quickstart) for getting started, or reach out to support@krypthq.com.</Note>
+Solutions to the most common issues with the Krypt CLI. If your problem isn't listed here, email support@krypthq.com.
+
+### "krypt: command not found" after install
+
+**Cause:** npm's global `bin` directory is not in your shell's `PATH`.
+
+**Fix:** Find npm's prefix and add it to your PATH:
+
+```bash
+npm config get prefix
+```
+
+Add `<prefix>/bin` to your shell profile (`~/.zshrc`, `~/.bashrc`, or equivalent):
+
+```bash
+export PATH="$(npm config get prefix)/bin:$PATH"
+```
+
+Restart your terminal or run `source ~/.zshrc`.
+
+### "EACCES: permission denied" on install
+
+**Cause:** npm is trying to write to a system-owned directory.
+
+**Fix:** Either install with `sudo`:
+
+```bash
+sudo npm install -g @kryptorg/cli
+```
+
+Or configure npm to use a user-owned directory for global installs. See the [npm docs on fixing permissions](https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally).
+
+### "Not authenticated" when running commands
+
+**Cause:** Your API key is invalid, expired, or was revoked.
+
+**Fix:** Log in again with a valid key:
+
+```bash
+krypt login --key krypt_live_<your-key>
+```
+
+If your key was revoked, generate a new one at [krypthq.com/dashboard/api-keys](https://krypthq.com/dashboard/api-keys).
+
+### "Project 'X' not found"
+
+**Cause:** The project doesn't exist on Krypt, or your account doesn't have access to it.
+
+**Fix:** Check which projects you can access:
+
+```bash
+krypt list
+```
+
+If the project isn't listed, create it in the [dashboard](https://krypthq.com/dashboard) or ask the project owner to invite you.
+
+### "Members cannot directly edit production secrets"
+
+**Cause:** Your role is Member and you're trying to push to production.
+
+**Fix:** Members must submit a change request for production edits. Use the dashboard to propose the change, then ask an Owner or Admin on your team to approve it.
+
+<Tip>
+If you need direct production access, ask the project owner to upgrade your role to Admin.
+</Tip>
+
+### "Failed to fetch" / network errors
+
+**Cause:** The Krypt API is unreachable — firewall, DNS, or proxy issue.
+
+**Fix:** Verify the API is up:
+
+```bash
+curl https://api.krypthq.com/api/health
+```
+
+If that returns a non-200 response, check [Krypt's status page](https://krypthq.com) for outages.
+
+If you're behind a corporate proxy, configure your terminal environment:
+
+```bash
+export HTTPS_PROXY=http://proxy.company.com:8080
+```
+
+### Secrets pulled but .env shows old values
+
+**Cause:** You pulled from the wrong environment, or secrets were updated after your last pull.
+
+**Fix:** Pull from the correct environment explicitly:
+
+```bash
+krypt pull --env staging
+```
+
+Use `krypt diff` to compare what's different between environments:
+
+```bash
+krypt diff --envA development --envB staging
+```
+
+### Still stuck?
+
+Email **support@krypthq.com** with:
+
+1. Your CLI version (`krypt --version`)
+2. The full command you ran
+3. The complete error output

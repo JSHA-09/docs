@@ -1,6 +1,79 @@
 ---
 title: "Projects and environments"
-description: "Organize secrets by project and deployment stage"
+description: "How Krypt organizes your secrets"
 ---
 
-<Note>This page is being written. For now, see the [Quickstart](/quickstart) for getting started, or reach out to support@krypthq.com.</Note>
+Krypt organizes secrets into **projects**, each with three fixed **environments**. This page explains how they work together.
+
+## Projects
+
+A project in Krypt represents one application or service — your frontend app, your API server, your mobile backend, etc. Each project has:
+
+- Its own set of secrets (environment variables)
+- Its own team members and permissions
+- Three separate environments
+
+Create projects from the [Krypt dashboard](https://krypthq.com/dashboard) or list your existing ones with:
+
+```bash
+krypt list
+```
+
+## Environments
+
+Every project has three fixed environments:
+
+| Environment | Purpose | Example `DATABASE_URL` |
+|-------------|---------|------------------------|
+| `development` | Local dev work | `postgres://localhost:5432/myapp_dev` |
+| `staging` | Pre-production testing | `postgres://staging-db.internal:5432/myapp` |
+| `production` | Live application | `postgres://prod-db.internal:5432/myapp` |
+
+The same secret keys exist across environments but hold different values. This mirrors how most teams deploy — the same app runs in multiple places with different configuration.
+
+## The .krypt file
+
+When you run `krypt init`, it creates a `.krypt` file in your project directory:
+
+```json
+{
+  "project": "my-app",
+  "environment": "development"
+}
+```
+
+This tells the CLI which project and default environment to use when you run `krypt push`, `krypt pull`, or `krypt run` from that directory.
+
+<Note>
+Add `.krypt` to your `.gitignore`. It contains your local binding and should not be committed.
+</Note>
+
+## Switching environments
+
+Override the default environment with the `--env` flag on any command:
+
+```bash
+krypt pull --env staging
+```
+
+```bash
+krypt push --env production
+```
+
+```bash
+krypt run --env staging -- npm test
+```
+
+```bash
+krypt diff --envA development --envB production
+```
+
+The `--env` flag is temporary — it doesn't change your `.krypt` file. Your default remains whatever you set with `krypt init`.
+
+## Why three fixed environments?
+
+We considered supporting custom environment names but kept it to three. Most teams follow the development → staging → production flow, and three covers that without adding configuration complexity. If you need a separate environment for a feature branch, use a separate project (e.g. `my-app-feature-x`).
+
+## Next steps
+
+- [Roles and permissions](/concepts/roles-and-permissions) — control who can access and edit each environment
