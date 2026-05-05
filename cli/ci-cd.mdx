@@ -146,7 +146,7 @@ Follow these rules to keep your CI pipelines secure:
 - **Scope keys to environments** — production keys should only exist on production deploy jobs
 - **Rotate keys regularly** — regenerate CI keys from the dashboard on a schedule (monthly or quarterly)
 - **Revoke immediately if compromised** — if a CI environment is breached, revoke its key instantly from the dashboard
-- **Use `--expires-in-days` for sensitive environments** — set short-lived keys for production CI that auto-expire
+- **Use a unique key per CI environment** — never share keys across staging and production
 </Warning>
 
 ## Troubleshooting

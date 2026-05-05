@@ -275,12 +275,12 @@ krypt run -- sh -c 'echo $DATABASE_URL'
 
 ## krypt diff
 
-Compares secrets between two environments of the same project. Shows which keys were added, removed, or changed.
+Compares secrets between two environments of the same project. Displays a colour-coded side-by-side table showing matching, mismatched, and missing keys.
 
 ### Usage
 
 ```bash
-krypt diff --envA <environment> --envB <environment>
+krypt diff <projectName> --envA <environment> --envB <environment>
 ```
 
 ### Options
@@ -293,14 +293,23 @@ krypt diff --envA <environment> --envB <environment>
 ### Examples
 
 ```bash
-krypt diff --envA development --envB production
+krypt diff my-app --envA development --envB production
 ```
 
 ```text
-+ STRIPE_LIVE_KEY     (only in production)
-- DEBUG_MODE          (only in development)
-~ DATABASE_URL        (changed)
+  my-app  development ↔ production
+  ──────────────────────────────────────────────────────────────────────────
+  KEY                   DEVELOPMENT                         PRODUCTION
+  ──────────────────────────────────────────────────────────────────────────
+  DATABASE_URL          postgres://localhost:5432/mydb       postgres://prod.db.example.com/mydb
+  API_TOKEN             dev-token-abc                        prod-token-xyz
+  DEBUG_MODE            true                                 (missing)
+  STRIPE_KEY            (missing)                            sk_live_xxx
+  ──────────────────────────────────────────────────────────────────────────
+  0 matching  2 mismatched  2 missing
 ```
+
+In a real terminal, matching rows are green, mismatched rows are yellow, and missing rows are red. Values are truncated to 36 characters.
 
 <Warning>
 The diff output reveals plaintext secret values in your terminal. Run this in a private session and avoid piping output to shared logs.
