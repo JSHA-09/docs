@@ -3,7 +3,9 @@
   "theme": "mint",
   "name": "Krypt",
   "colors": {
-    "primary": "#FF5733"
+    "primary": "#FF5733",
+    "light": "#FF7A5C",
+    "dark": "#7C3AED"
   },
   "appearance": {
     "default": "dark"
