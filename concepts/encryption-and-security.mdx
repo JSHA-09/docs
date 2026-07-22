@@ -13,7 +13,7 @@ All secrets are encrypted with **AES-256-CBC** before being stored. Each secret 
 iv:ciphertext (hex-encoded)
 ```
 
-The encryption key never leaves the server and is held in process memory only — it is not persisted to disk or environment variables on the server.
+The encryption key never leaves the server and is provided via a server environment variable — it is never exposed to clients or included in API responses.
 
 ## Encryption in transit
 

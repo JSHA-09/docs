@@ -3,7 +3,7 @@ title: "What is Krypt"
 description: "Secrets management for developers"
 ---
 
-Krypt is a secrets management platform that lets development teams store, share, and deploy environment variables with end-to-end encryption. It replaces the fragile practice of passing `.env` files through Slack, email, or git — giving every team member access to the right secrets for the right environment.
+Krypt is a secrets management platform that lets development teams store, share, and deploy environment variables with AES-256 encryption at rest. It replaces the fragile practice of passing `.env` files through Slack, email, or git — giving every team member access to the right secrets for the right environment.
 
 ## The problem
 
@@ -19,13 +19,13 @@ Most teams manage secrets by copy-pasting `.env` files between developers. This 
 
 Krypt provides three things:
 
-1. **Encrypted central store** — secrets are encrypted with AES-256 before they leave your machine, stored centrally, and decrypted only when pulled or injected
+1. **Encrypted central store** — secrets are sent over TLS, stored centrally with AES-256 encryption at rest, and decrypted only when pulled or injected
 2. **CLI for daily workflow** — `krypt push`, `krypt pull`, and `krypt run` fit into your existing terminal workflow without changing how you develop
 3. **Dashboard for team management** — invite members, assign roles, review change requests for production, and see an audit log of every action
 
 ## Key features
 
-- End-to-end AES-256 encryption for all secrets
+- AES-256 encryption at rest for all secrets
 - Three environments per project: development, staging, production
 - Role-based access control (Owner, Admin, Member, Viewer)
 - Change requests for production safety — members propose, admins approve
