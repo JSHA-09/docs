@@ -51,7 +51,8 @@
         "pages": [
           "concepts/projects-and-environments",
           "concepts/roles-and-permissions",
-          "concepts/encryption-and-security"
+          "concepts/encryption-and-security",
+          "concepts/webhooks"
         ]
       },
       {

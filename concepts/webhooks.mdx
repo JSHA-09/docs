@@ -1,0 +1,214 @@
+---
+title: "Webhooks"
+description: "Get notified when a secret changes"
+---
+
+Webhooks tell your systems that a secret changed. When someone creates, updates, or deletes a secret in a project, Krypt sends a signed HTTP POST to the URL you registered — so you can redeploy a service, invalidate a cache, or post to a team channel.
+
+<Note>
+**Webhook payloads contain metadata only — never secret values.** A delivery tells you *which key* changed, in *which environment*, and *when*. It never includes the value of the secret, before or after the change. To read a value, use `krypt pull` or the dashboard.
+</Note>
+
+## Creating a webhook
+
+Webhooks are configured per project, and only owners and admins can manage them.
+
+<Steps>
+
+<Step title="Open the Webhooks tab">
+In your [Krypt dashboard](https://krypthq.com/dashboard), open a project and select the **Webhooks** tab.
+</Step>
+
+<Step title="Add the endpoint">
+Enter a **name** (3–50 characters) and the **URL** that will receive deliveries.
+
+The URL must use `https://`. Private, loopback, and internal addresses are rejected — both when you save the webhook and again on every delivery.
+</Step>
+
+<Step title="Choose environment and events">
+Scope the webhook to `development`, `staging`, `production`, or all environments, then pick which of the three events it should receive.
+</Step>
+
+<Step title="Save the signing secret">
+On save, Krypt shows a **signing secret** — a 64-character hex string used to sign every delivery.
+
+It is shown **once** and cannot be recovered. Copy it and store it with your other secrets before closing the dialog.
+</Step>
+
+</Steps>
+
+<Warning>
+If you lose the signing secret, you cannot retrieve it. Rotate it from the webhook's menu to generate a new one — the old secret stops working immediately, so update your receiver before rotating.
+</Warning>
+
+## Events
+
+Three events exist:
+
+| Event | Fired when |
+|-------|-----------|
+| `secret.created` | A new secret is added to an environment |
+| `secret.updated` | An existing secret's value is changed, or a secret is restored to an earlier version |
+| `secret.deleted` | A secret is removed from an environment |
+
+A delivery is sent only when **both** conditions hold: the event is in the webhook's subscribed list, and the webhook's environment is `all` or matches the environment of the changed secret.
+
+<Note>
+Restoring a secret to a previous version fires `secret.updated`, the same as an ordinary edit. The payload does not distinguish the two.
+</Note>
+
+## Payload
+
+Every secret event sends this JSON body:
+
+```json
+{
+  "event": "secret.updated",
+  "key": "DATABASE_URL",
+  "environment": "production",
+  "project_id": "3f9a1c62-5d84-4b7e-9c21-0e5a7d3f1b88",
+  "timestamp": "2026-08-07T09:14:22.331Z"
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `event` | string | `secret.created`, `secret.updated`, or `secret.deleted` |
+| `key` | string | The name of the secret that changed — not its value |
+| `environment` | string | `development`, `staging`, or `production` |
+| `project_id` | string | UUID of the project |
+| `timestamp` | string | ISO 8601 timestamp of the delivery |
+
+These five fields are the entire payload. In particular, it does **not** identify who made the change — to see the actor, check the project's activity log in the dashboard.
+
+Two headers accompany every delivery:
+
+| Header | Value |
+|--------|-------|
+| `X-Krypt-Signature` | `sha256=<hex digest>` — see [Verifying signatures](#verifying-signatures) |
+| `X-Krypt-Event` | The event name, so you can route without parsing the body |
+
+## Test ping
+
+The **Test** action on a webhook sends a ping so you can confirm your endpoint is reachable. The test payload has a **different shape** to a real event:
+
+```json
+{
+  "event": "test.ping",
+  "project_id": "3f9a1c62-5d84-4b7e-9c21-0e5a7d3f1b88",
+  "test": true,
+  "message": "This is a test ping from Krypt",
+  "timestamp": "2026-08-07T09:14:22.331Z"
+}
+```
+
+Differences from a secret event:
+
+- There is **no `key` and no `environment`** field. A receiver that assumes those are always present will break on a test ping.
+- It carries `test: true` and a human-readable `message`.
+- It ignores the webhook's event and environment filters — a test ping is delivered even if the webhook only subscribes to `secret.deleted` in `production`.
+
+The ping is signed exactly like a real delivery, with `X-Krypt-Event: test.ping`. The webhook must be active — testing a disabled webhook returns an error instead of sending.
+
+<Tip>
+Handle `test.ping` explicitly in your receiver and return `200` — that way the dashboard reports a successful test, and your event-handling logic never sees a payload without a `key`.
+</Tip>
+
+## Verifying signatures
+
+Every delivery is signed with **HMAC-SHA256** using your webhook's signing secret. The digest is computed over the **raw request body** and sent as:
+
+```text
+X-Krypt-Signature: sha256=<hex digest>
+```
+
+<Warning>
+Verify against the **raw bytes** of the request body, exactly as received. If you parse the JSON and re-serialise it, key order and whitespace can differ from what Krypt signed, and the signature will not match. In Express this means using `express.raw()` on the webhook route — not `express.json()`.
+</Warning>
+
+A complete Node.js + Express receiver:
+
+```js
+import express from "express";
+import crypto from "node:crypto";
+
+const app = express();
+const SIGNING_SECRET = process.env.KRYPT_SIGNING_SECRET;
+
+app.post(
+  "/krypt-webhook",
+  // express.raw() keeps req.body as a Buffer — the exact bytes Krypt signed.
+  express.raw({ type: "application/json" }),
+  (req, res) => {
+    const received = req.get("X-Krypt-Signature") ?? "";
+    const expected =
+      "sha256=" +
+      crypto
+        .createHmac("sha256", SIGNING_SECRET)
+        .update(req.body)
+        .digest("hex");
+
+    // Constant-time compare. timingSafeEqual throws on length mismatch,
+    // so check length first.
+    const a = Buffer.from(received);
+    const b = Buffer.from(expected);
+    if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+      return res.status(401).send("Invalid signature");
+    }
+
+    const payload = JSON.parse(req.body.toString("utf8"));
+
+    if (payload.event === "test.ping") {
+      return res.status(200).send("ok");
+    }
+
+    console.log(`${payload.event}: ${payload.key} in ${payload.environment}`);
+
+    // Respond 2xx quickly — Krypt times out after 10 seconds.
+    res.status(200).send("ok");
+  }
+);
+
+app.listen(3000);
+```
+
+Reject any request whose signature does not match. An unverified request proves nothing about its origin.
+
+## Endpoint authentication
+
+If your receiver needs its own credentials on top of the signature, set an auth type when creating the webhook. Krypt then adds an `Authorization` header to every delivery:
+
+| Auth type | Header sent |
+|-----------|-------------|
+| `none` | No `Authorization` header (default) |
+| `bearer` | `Authorization: Bearer <your token>` |
+| `basic` | `Authorization: Basic <base64 of username:password>` |
+
+Basic credentials are entered as `username:password`. Stored credentials are encrypted at rest and never returned in full by the API — reads show a masked value only.
+
+This is optional and independent of signing. The signature is always sent; endpoint auth is for receivers that additionally gate on a token.
+
+## Limitations
+
+Current behaviour, stated plainly so you can design your receiver around it:
+
+<Warning>
+- **One delivery attempt, no retries.** Krypt sends each event once, with a 10-second timeout. If your endpoint is down, returns a non-2xx status, or times out, the event is **not retried and is lost**. The failure is recorded in the project's activity log and as the webhook's last status, but it is never resent.
+- **No delivery ID.** Payloads carry no unique event identifier, so there is nothing to deduplicate on if you receive the same event twice.
+- **No replay protection.** There is no timestamp header and no expiry on a signature. A captured delivery remains valid indefinitely if replayed against your endpoint. The `timestamp` inside the body is signed — you can reject old payloads yourself by comparing it against the current time.
+- **No actor.** The payload does not say who made the change.
+</Warning>
+
+Because nothing is retried, your only record of a delivery is the dashboard: each webhook in the project's **Webhooks** tab shows when it last fired and the HTTP status it returned, and the project's activity log lists every individual success and failure.
+
+Additional constraints worth knowing:
+
+- Only `https://` URLs are accepted; private, loopback, and internal addresses are blocked, and the URL is re-validated on every delivery.
+- Only owners and admins can create, edit, test, or delete webhooks.
+- On a Free project that is over the team-member cap, the project becomes read-only and webhooks stop firing entirely — including test pings.
+
+## Next steps
+
+- [Roles and permissions](/concepts/roles-and-permissions) — who can manage webhooks
+- [Encryption and security](/concepts/encryption-and-security) — how Krypt protects stored secrets
+- [CLI commands](/cli/commands) — push and pull the secrets these events describe
