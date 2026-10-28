@@ -7,13 +7,15 @@ This page summarizes how Krypt encrypts and stores your secrets. For full detail
 
 ## Encryption at rest
 
-All secrets are encrypted with **AES-256-CBC** before being stored. Each secret value gets a fresh 16-byte initialization vector (IV). Stored format:
+All secrets are encrypted with **AES-256-GCM** before being stored. Each encryption uses a fresh, random 12-byte nonce (IV) and produces a 16-byte authentication tag. If the stored nonce, tag or ciphertext is altered, decryption fails instead of returning altered plaintext. Stored format:
 
 ```text
-iv:ciphertext (hex-encoded)
+v2:base64(nonce + tag + ciphertext)
 ```
 
 The encryption key never leaves the server and is provided via a server environment variable — it is never exposed to clients or included in API responses.
+
+Secrets are decrypted server side by the Krypt API when they are read. This is encryption at rest, not end-to-end encryption.
 
 ## Encryption in transit
 
