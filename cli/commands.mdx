@@ -348,7 +348,7 @@ krypt share my-app alice@company.com --role admin
 ```
 
 <Note>
-Inviting team members requires a Pro plan. The invited user receives an email and must accept before they can access project secrets. See [Roles and permissions](/concepts/roles-and-permissions) for what each role can do.
+The invited user receives an email and must accept before they can access project secrets. On the Free plan a project can have up to 3 people, including the owner, and every teammate is an admin, so use `--role admin`. Pro removes the member limit and adds the `member` and `viewer` roles. See [Roles and permissions](/concepts/roles-and-permissions) for what each role can do.
 </Note>
 
 ---
@@ -363,7 +363,7 @@ To point the CLI at a custom API endpoint, set the `KRYPT_API_URL` environment v
 export KRYPT_API_URL=https://custom.krypthq.com
 ```
 
-This is useful for self-hosted Krypt deployments or development against a local server.
+This is useful for testing.
 
 ## Exit codes
 
