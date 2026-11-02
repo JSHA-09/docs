@@ -32,7 +32,7 @@ KRYPT_API_URL=https://custom.krypthq.com krypt login --key krypt_live_abc123def4
 ```
 
 <Note>
-Your API key is stored in `~/.krypt/config.json` with `0600` permissions. Generate keys at [krypthq.com/dashboard/api-keys](https://krypthq.com/dashboard/api-keys). Keys are shown only once — store them somewhere safe.
+Your API key is stored in `~/.krypt/config.json` with `0600` permissions. Generate keys at [krypthq.com/dashboard/api-keys](https://www.krypthq.com/dashboard/api-keys). Keys are shown only once — store them somewhere safe.
 </Note>
 
 ---
@@ -348,7 +348,7 @@ krypt share my-app alice@company.com --role admin
 ```
 
 <Note>
-The invited user receives an email and must accept before they can access project secrets. On the Free plan a project can have up to 3 people, including the owner, and every teammate is an admin, so use `--role admin`. Pro removes the member limit and adds the `member` and `viewer` roles. See [Roles and permissions](/concepts/roles-and-permissions) for what each role can do.
+The invited user receives an email and must accept before they can access project secrets. Invites expire after 7 days; run the command again to send a new one. On the Free plan a project can have up to 3 people, including the owner, and every teammate is an admin, so use `--role admin`. Pro removes the member limit and adds the `member` and `viewer` roles. See [Roles and permissions](/concepts/roles-and-permissions) for what each role can do.
 </Note>
 
 ---
