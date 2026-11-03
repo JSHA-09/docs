@@ -231,6 +231,8 @@ krypt pull --env staging
 If a `.env` file already exists, it is overwritten. Back up local changes before pulling if needed.
 </Note>
 
+Every pull is recorded in the project's audit log: who pulled, which environment, how many secrets, and that it came from the CLI. The values themselves are never logged. The same goes for `krypt run` and `krypt diff`. See [Encryption and security](/concepts/encryption-and-security#audit-log).
+
 ---
 
 ## krypt run

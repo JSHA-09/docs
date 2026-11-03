@@ -29,6 +29,18 @@ API keys are **SHA-256 hashed** before being stored in the database. The plainte
 
 The CLI stores your API key locally at `~/.krypt/config.json` with **0600 permissions** (owner read/write only). Other users on the same system cannot read your credentials.
 
+## Audit log
+
+Every change to a secret or to team access is recorded with who did it and when. So is every read of secret values: `krypt pull`, `krypt run`, `krypt diff`, a dashboard view, a version history view, and any API key request that returns values. A read entry records the person, the project, the environment, how many values were returned, and whether it came from the dashboard, the CLI or an API key. It never records the values themselves. Repeated reads of the same environment by the same person within ten minutes are logged once.
+
+Entries are deleted 90 days after they are created, on every plan. Within those 90 days the dashboard shows the last 7 days on Free and the full 90 on Pro.
+
+## Your data
+
+From your account settings you can download a JSON export of everything Krypt stores about your account, including your full audit log with no date window. Secret values are not included, in plaintext or encrypted form, and neither are API key hashes or webhook signing secrets. Use `krypt pull` or the dashboard to retrieve values.
+
+Deleting your account is immediate and cannot be undone. The full list of what is removed and what remains is in the [Privacy Policy](https://www.krypthq.com/privacy).
+
 ## Sub-processors
 
 Krypt uses the following third-party services to operate:
