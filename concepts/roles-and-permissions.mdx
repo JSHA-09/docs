@@ -38,11 +38,11 @@ Good for: stakeholders, PMs, or auditors who need visibility without write acces
 
 ## Change requests
 
-Change requests are Krypt's production safety mechanism. When a member tries to edit a production secret, Krypt blocks the direct write and creates a change request instead.
+Change requests are Krypt's production safety mechanism. When a member tries to edit a production secret directly, Krypt refuses the write; the member submits a change request instead.
 
 <Steps>
 <Step title="Member proposes a change">
-The member edits a production secret in the dashboard or runs `krypt push --env production`. Instead of applying immediately, Krypt creates a pending change request.
+The member opens **Request change** on a production secret in the dashboard and submits the proposed value. Nothing changes until it is reviewed. A direct write to production by a member, from the dashboard or with `krypt push --env production`, is refused with a message to submit a change request instead.
 </Step>
 <Step title="Owner or admin reviews">
 Pending requests appear in the project dashboard. The reviewer sees the proposed key/value changes and can approve or reject.
